@@ -558,7 +558,13 @@ module Utils
         location = response[:headers]["location"]
         next if location.blank?
 
-        base_url = URI.join(base_url, location).to_s
+        begin
+          joined = URI.join(base_url, location)
+        rescue URI::InvalidURIError
+          next
+        else
+          base_url = joined.to_s
+        end
       end
 
       base_url
